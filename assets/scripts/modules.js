@@ -40,6 +40,8 @@ var RELEASE=false;
 // module_done()
 // -- wait until all async has finished (could take a long time) --
 // module_ready()
+// -- wait until first frame is ready (only triggered if UPDATE == true) --
+// module_complete()
 
 // UPDATE:
 // module_update_pre()
@@ -72,6 +74,7 @@ var log_strings={
 
 function prop_init() {
   prop={};
+  prop.complete=false;
   prop.temp="nothing here";
   prop.version=VERSION;
   prop.version_string="v"+VERSION.join(".");
@@ -230,6 +233,10 @@ function resize() {
 }
 
 function update() {
+  if(!prop.complete) {
+    call_module("*","complete");
+    prop_complete=true;
+  }
   call_module("*","update_pre");
   call_module("*","update");
   call_module("*","update_post");
